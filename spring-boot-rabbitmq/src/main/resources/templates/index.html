@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<p>单文件上传</p>
+<form action="file/upload" method="POST" enctype="multipart/form-data">
+    文件：<input type="file" name="file"/>
+    <input type="submit"/>
+</form>
+<hr/>
+<p>文件下载</p>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th style="text-align: center">文件名</th>
+        <th style="text-align: center">大小</th>
+        <th style="text-align: center">下载</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="file : ${list}">
+        <td th:text="${file.name}" style="text-align: left">neo</td>
+        <td th:text="${file.size}" style="text-align: left">Otto</td>
+        <td><a th:href="@{/file/download(fileName=${file.name})}" style="text-align: center">下载</a></td>
+    </tr>
+    </tbody>
+</table>
+<hr/>
+<p>多文件上传</p>
+<form method="POST" enctype="multipart/form-data" action="batch">
+    <p>文件1：<input type="file" name="file"/></p>
+    <p>文件2：<input type="file" name="file"/></p>
+    <p><input type="submit" value="上传"/></p>
+</form>
+</body>
+</html>

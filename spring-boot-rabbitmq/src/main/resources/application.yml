@@ -1,0 +1,21 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /rabbitmq
+book:
+  name: spring-boot-rabbitmq
+  author: wkk1994
+info:
+  app:
+    name: rabbitmq-demo
+    author: wkk1994
+spring:
+  rabbitmq:
+    host: 47.98.190.67
+    #addresses: 47.98.190.67:5673
+    port: 5673
+    username: admin
+    password: admin
+    publisher-confirms: false
+    publisher-returns: false
+    virtual-host: /
