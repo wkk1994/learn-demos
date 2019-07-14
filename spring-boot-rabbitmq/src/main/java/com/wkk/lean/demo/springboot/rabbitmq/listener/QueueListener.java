@@ -20,12 +20,13 @@ public class QueueListener {
      * @param channel
      * @param message
      */
-    @RabbitListener(queues = "direct_queue")
+    @RabbitListener(queues = "direct_queue", containerFactory = "simpleRabbitListenerContainerFactory")
     public void directQueueListener(Channel channel, Message message){
         String body = new String(message.getBody());
         System.out.println("监听到消息："+body);
         try {
-            channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
+            // 消息确认
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {
             e.printStackTrace();
         }

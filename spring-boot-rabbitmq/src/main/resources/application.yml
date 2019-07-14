@@ -19,3 +19,6 @@ spring:
     publisher-confirms: true
     publisher-returns: true
     virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: auto #消息看情况确认
