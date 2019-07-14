@@ -1,9 +1,12 @@
 package com.wkk.lean.demo.springboot.rabbitmq.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +17,21 @@ import java.util.Map;
  **/
 @Configuration
 public class RabbitMQConfig {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private CustomConfirmCallback customConfirmCallback;
+
+    @Autowired
+    private CustomReturnCallback customReturnCallback;
+
+    @PostConstruct
+    public void init(){
+        rabbitTemplate.setConfirmCallback(customConfirmCallback);//指定 ConfirmCallback
+        rabbitTemplate.setReturnCallback(customReturnCallback);//指定 ReturnCallback
+    }
 
     /**
      * direct路由测试

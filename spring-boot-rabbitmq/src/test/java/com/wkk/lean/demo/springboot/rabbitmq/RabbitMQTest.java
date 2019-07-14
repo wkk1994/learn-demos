@@ -25,6 +25,14 @@ public class RabbitMQTest {
     private SendMessageService sendMessageService;
 
     /**
+     * @description 发送direct消息
+     */
+    @Test
+    public void sendDirectMessage() {
+        sendMessageService.sendMessage("direct_exchange","direct_routing_key","direct消息测试");
+    }
+
+    /**
      * @description 发送fanout消息
      */
     @Test

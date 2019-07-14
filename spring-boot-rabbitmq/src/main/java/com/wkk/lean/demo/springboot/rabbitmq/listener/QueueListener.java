@@ -5,6 +5,8 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 /**
  * @Description simple-test-queue监听
  * @Author wkk
@@ -22,6 +24,11 @@ public class QueueListener {
     public void directQueueListener(Channel channel, Message message){
         String body = new String(message.getBody());
         System.out.println("监听到消息："+body);
+        try {
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
