@@ -12,6 +12,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @Description simple-test-queue监听
@@ -149,5 +150,29 @@ public class QueueListener {
         System.out.println("reply_to_queue监听到消息："+body);
         System.out.println("CorrelationId: "+message.getMessageProperties().getCorrelationId());
         System.out.println("ReplyTo: "+message.getMessageProperties().getReplyTo());
+    }
+
+    /**
+     * delay_to_queue消息监听
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = "delay_to_queue")
+    public void delayToQueueListener(Channel channel, Message message){
+        System.out.println("now time : "+new Date());
+        String body = new String(message.getBody());
+        System.out.println("delay_to_queue监听到消息："+body);
+    }
+
+    /**
+     * delay_plugin_queue消息监听
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = "delay_plugin_queue")
+    public void delayPluginQueueListener(Channel channel, Message message){
+        System.out.println("now time : "+new Date());
+        String body = new String(message.getBody());
+        System.out.println("delay_plugin_queue监听到消息："+body);
     }
 }

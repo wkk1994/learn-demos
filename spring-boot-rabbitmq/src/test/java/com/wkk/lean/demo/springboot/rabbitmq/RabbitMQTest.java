@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -125,4 +126,35 @@ public class RabbitMQTest {
         rabbitTemplate.convertAndSend("direct_rpc_exchange", "direct_rpc_routing_key","rpc消息", message);
     }
 
+    /**
+     * 发送延迟消息
+     */
+    @Test
+    public void sendDelayMessage(){
+        MessagePostProcessor message = new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setExpiration("15000");
+                return message;
+            }
+        };
+        System.out.println("now time : "+new Date());
+        rabbitTemplate.convertAndSend("direct_delay_exchange", "direct_delay_routing_key","延迟消息", message);
+    }
+
+    /**
+     * 发送插件延迟消息
+     */
+    @Test
+    public void sendDelaypluginMessage(){
+        MessagePostProcessor message = new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setHeader("x-delay", 10000);
+                return message;
+            }
+        };
+        System.out.println("now time : "+new Date());
+        rabbitTemplate.convertAndSend("direct_delay_plugin_exchange", "direct_delay_plugin_routing_key","10插件延迟消息", message);
+    }
 }

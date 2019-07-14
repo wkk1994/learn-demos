@@ -195,4 +195,64 @@ public class RabbitMQConfig {
     Binding bindingDirectRpcQueue() {
         return BindingBuilder.bind(rpcAsyncQueue()).to(directRpcExchange()).with("direct_rpc_routing_key");
     }
+
+
+    /**
+     * 延迟队列创建
+     * @return
+     */
+    @Bean
+    public Queue delayQueue() {
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("x-dead-letter-exchange", "direct_delay_to_exchange");
+        args.put("x-dead-letter-routing-key", "direct_delay_to_routing_key");
+        args.put("x-message-ttl", 10000);
+        return new Queue("delay_queue", true, false, false, args);
+    }
+
+    @Bean
+    DirectExchange directDelayExchange() {
+        return new DirectExchange("direct_delay_exchange");
+    }
+
+    @Bean
+    Binding bindingDirectDelayQueue() {
+        return BindingBuilder.bind(delayQueue()).to(directDelayExchange()).with("direct_delay_routing_key");
+    }
+
+    @Bean
+    public Queue delayToQueue() {
+        return new Queue("delay_to_queue", true, false, false);
+    }
+
+    @Bean
+    DirectExchange directDelayToExchange() {
+        return new DirectExchange("direct_delay_to_exchange");
+    }
+
+    @Bean
+    Binding bindingDirectDelayToQueue() {
+        return BindingBuilder.bind(delayToQueue()).to(directDelayToExchange()).with("direct_delay_to_routing_key");
+    }
+
+    /**
+     * 插件实现任意时间延迟队列
+     * @return
+     */
+    @Bean
+    public Queue delayPluginQueue() {
+        return new Queue("delay_plugin_queue", true, false, false);
+    }
+
+    @Bean
+    Exchange directDelayPluginExchange() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("x-delayed-type", "direct");
+        return new ExchangeBuilder("direct_delay_plugin_exchange","x-delayed-message").withArguments(map).build();
+    }
+
+    @Bean
+    Binding bindingDirectDelayPluginQueue() {
+        return BindingBuilder.bind(delayPluginQueue()).to(directDelayPluginExchange()).with("direct_delay_plugin_routing_key").and(null);
+    }
 }
