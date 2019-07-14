@@ -3,13 +3,19 @@ package com.wkk.lean.demo.springboot.rabbitmq;
 import com.wkk.lean.demo.springboot.rabbitmq.message.SendMessageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @Description rabbitmq发送消息测试
@@ -23,6 +29,9 @@ public class RabbitMQTest {
 
     @Autowired
     private SendMessageService sendMessageService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * @description 发送direct消息
@@ -89,4 +98,31 @@ public class RabbitMQTest {
         args.put("three", "three");
         sendMessageService.sendMessage("headers_exchange",null,"headers消息测试", args);
     }
+
+    /**
+     * 同步RPC
+     */
+    @Test
+    public void sendSyncRpcMessage(){
+        String result = (String) rabbitTemplate.convertSendAndReceive("rpc_sync_queue", "sync消息");
+        System.out.println("响应： "+result);
+
+    }
+
+    /**
+     * 异步RPC
+     */
+    @Test
+    public void sendRpcAsyncMessage(){
+        MessagePostProcessor message = new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setCorrelationId("id123");
+                message.getMessageProperties().setReplyTo("reply_to_queue");
+                return message;
+            }
+        };
+        rabbitTemplate.convertAndSend("direct_rpc_exchange", "direct_rpc_routing_key","rpc消息", message);
+    }
+
 }

@@ -161,4 +161,38 @@ public class RabbitMQConfig {
         args.put("three", "three");
         return BindingBuilder.bind(headersQueue2()).to(headersExchange()).whereAny(args).match();
     }
+
+
+    /**
+     * 同步RPC调用
+     * @return
+     */
+    @Bean
+    public Queue rpcSyncQueue() {
+        return new Queue("rpc_sync_queue");
+    }
+
+    /**
+     * 异步RPC调用
+     * @return
+     */
+    @Bean
+    public Queue rpcAsyncQueue() {
+        return new Queue("rpc_async_queue");
+    }
+
+    @Bean
+    public Queue replyToQueue() {
+        return new Queue("reply_to_queue");
+    }
+
+    @Bean
+    DirectExchange directRpcExchange() {
+        return new DirectExchange("direct_rpc_exchange");
+    }
+
+    @Bean
+    Binding bindingDirectRpcQueue() {
+        return BindingBuilder.bind(rpcAsyncQueue()).to(directRpcExchange()).with("direct_rpc_routing_key");
+    }
 }

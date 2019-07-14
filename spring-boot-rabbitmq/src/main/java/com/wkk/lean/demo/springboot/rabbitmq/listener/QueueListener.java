@@ -3,7 +3,13 @@ package com.wkk.lean.demo.springboot.rabbitmq.listener;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.IOException;
 
@@ -14,6 +20,9 @@ import java.io.IOException;
  **/
 @Component
 public class QueueListener {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * direct_queue消息监听
@@ -96,5 +105,49 @@ public class QueueListener {
     public void headersQueue2Listener(Channel channel, Message message){
         String body = new String(message.getBody());
         System.out.println("headers_queue2监听到消息："+body);
+    }
+
+    /**
+     * rpc_sync_queue消息监听
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = "rpc_sync_queue")
+    public String rpcSyncQueueListener(Channel channel, Message message){
+        String body = new String(message.getBody());
+        System.out.println("rpc_sync_queue监听到消息："+body);
+        int millis = (int) (Math.random() * 2 * 1000);
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+        }
+        return body + " sleep for " + millis + " ms";
+    }
+
+    /**
+     * rpc_queue消息监听
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = "rpc_async_queue")
+    public void rpcQueueListener(Channel channel, Message message, @Header(AmqpHeaders.REPLY_TO) String replyTo){
+        String body = new String(message.getBody());
+        System.out.println("rpc_async_queue监听到消息："+body);
+        System.out.println("CorrelationId: "+message.getMessageProperties().getCorrelationId());
+        System.out.println("ReplyTo: "+message.getMessageProperties().getReplyTo());
+        rabbitTemplate.convertAndSend(replyTo, body);
+    }
+
+    /**
+     * reply_to_queue消息监听
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = "reply_to_queue")
+    public void replyToQueueListener(Channel channel, Message message){
+        String body = new String(message.getBody());
+        System.out.println("reply_to_queue监听到消息："+body);
+        System.out.println("CorrelationId: "+message.getMessageProperties().getCorrelationId());
+        System.out.println("ReplyTo: "+message.getMessageProperties().getReplyTo());
     }
 }
