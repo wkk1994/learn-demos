@@ -30,6 +30,11 @@ public class UnSafeDemo {
     }
 
     public static void main(String[] args) throws Exception {
+        // unsageTest();
+        casTest();
+    }
+
+    private static void unsageTest() throws InstantiationException, NoSuchFieldException {
         // 获取User的属性偏移量
         Class<User> userClass = User.class;
         Field[] declaredFields = userClass.getDeclaredFields();
@@ -58,6 +63,41 @@ public class UnSafeDemo {
         unsafe.putAddress(memory,2000);
         long addrData=unsafe.getAddress(memory);
         System.out.println("addrData:"+addrData);
+    }
+
+    public static void test() throws Exception {
+        //反射获取Unsafe
+        Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+        theUnsafe.setAccessible(true);
+        Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+        User user = (User) unsafe.allocateInstance(User.class);
+        System.out.println(user);
+        unsafe.putObject(user, unsafe.objectFieldOffset(User.class.getDeclaredField("name")), "测试");
+        System.out.println(user.name);
+    }
+
+    private static void casTest() throws Exception {
+        //反射获取Unsafe
+        Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+        theUnsafe.setAccessible(true);
+        Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+        User user = (User) unsafe.allocateInstance(User.class);
+        long ageOffset = unsafe.objectFieldOffset(User.class.getDeclaredField("age"));
+        for (int i = 0; i < 50; i++) {
+            int finalI = i;
+            Thread thread = new Thread(() -> {
+                int anInt = unsafe.getInt(user, ageOffset);
+                boolean b = unsafe.compareAndSwapInt(user, ageOffset, anInt, ++anInt);
+                if(b){
+                    System.out.println(finalI + " boolean : "+ unsafe.getInt(user, ageOffset));
+                }else {
+                    System.out.println(finalI + " boolean : "+ b);
+                }
+
+            });
+            thread.start();
+        }
+
 
     }
 
