@@ -14,6 +14,11 @@ public class JoinTest {
         public void run() {
             System.out.println("A begin...");
             yield();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("A end...");
         }
     }

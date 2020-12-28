@@ -11,6 +11,9 @@ public class SingletonTest {
     public static class Singleton1{
         private static Singleton1 singleton1 = new Singleton1();
 
+        static {
+            System.out.println("Singleton1");
+        }
         private Singleton1(){}
 
         public static Singleton1 getInstance(){
@@ -21,6 +24,10 @@ public class SingletonTest {
     //懒汉式 存在线程安全问题
     public static class Singleton2{
         private static Singleton2 singleton2 = null;
+
+        static {
+            System.out.println("Singleton2");
+        }
 
         private Singleton2(){}
 
@@ -36,6 +43,9 @@ public class SingletonTest {
     public static class Singleton3{
         private static Singleton3 singleton3 = null;
 
+        static {
+            System.out.println("Singleton3");
+        }
         private Singleton3(){}
 
         public static Singleton3 getInstance(){
@@ -53,6 +63,9 @@ public class SingletonTest {
     //静态内部类(懒汉+无锁) 利用类加载机制
     public static class Singleton4{
 
+        static {
+            System.out.println("Singleton4");
+        }
         private static class Singleton4Holder{
             private static Singleton4 singleton4 = new Singleton4();
         }
@@ -64,4 +77,12 @@ public class SingletonTest {
     }
 
     //枚举
+
+    public static void main(String[] args) {
+        System.out.println("-----");
+        System.out.println(Singleton1.class);
+        System.out.println(Singleton2.class);
+        System.out.println(Singleton3.class);
+        System.out.println(Singleton4.class);
+    }
 }

@@ -1,3 +1,4 @@
+/*
 package com.wkk.demo.imagehandle;
 
 import com.alibaba.simpleimage.ImageFormat;
@@ -20,11 +21,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+*/
 /**
  * 阿里巴巴 simpleimage 图片处理工具类 TODO 有问题不能成功？
  * 功能 等比例缩放  裁切 加水印 复合操作
  *
- */
+ *//*
+
 public class SimpleImageUtils {
 
     public static String WATER_IMAGE_URL = "C:\\img\\watermark.png";
@@ -50,13 +53,15 @@ public class SimpleImageUtils {
 
     }
 
-    /**
+    */
+/**
      *
      * @param pInput
      * @param pImgeFlag
      * @return
      * @throws Exception
-     */
+     *//*
+
     public static boolean isPicture(String pInput, String pImgeFlag) throws Exception {
         if (StringUtils.isBlank(pInput)) {
             return false;
@@ -75,13 +80,15 @@ public class SimpleImageUtils {
         return false;
     }
 
-    /**
+    */
+/**
      * 等比例缩放 会裁切部分内容
      * @param src
      * @param target
      * @param width
      * @param height
-     */
+     *//*
+
     @SuppressWarnings("static-access")
     public final static void scaleNormal(String src, String target, int width, int height) {
         File out = new File(target); // 目的图片
@@ -130,14 +137,16 @@ public class SimpleImageUtils {
 
         }
     }
-    /**
+    */
+/**
      * 压缩图片到 指定尺寸,图片比目标图片小则不会变形(有水印）
      *
      * @param src
      * @param target
      * @param width
      * @param height
-     */
+     *//*
+
     public final static void scaleWithWaterMark(String src, String target, int width, int height) {
         File out = new File(target); // 目的图片
         FileOutputStream outStream = null;
@@ -192,12 +201,14 @@ public class SimpleImageUtils {
         }
 
     }
-    /**
+    */
+/**
      * 缩放到指定宽度 高度自适应
      * @param src
      * @param target
      * @param width
-     */
+     *//*
+
     @SuppressWarnings("static-access")
     public final static void scaleWithWidth(String src, String target, Integer width) {
         File out = new File(target); // 目的图片
@@ -234,12 +245,14 @@ public class SimpleImageUtils {
         }
 
     }
-    /**
+    */
+/**
      * 缩放到指定高度，宽度自适应
      * @param src
      * @param target
      * @param height
-     */
+     *//*
+
     public final static void scaleWithHeight(String src, String target, Integer height) {
         File out = new File(target); // 目的图片
         FileOutputStream outStream = null;
@@ -277,35 +290,41 @@ public class SimpleImageUtils {
         }
 
     }
-    /**
+    */
+/**
      * 根据宽、高和目标宽度 等比例求高度
      * @param w
      * @param h
      * @param width
      * @return
-     */
+     *//*
+
     public static Integer getHeight(Integer w, Integer h, Integer width) {
 
         return h * width / w;
     }
-    /**
+    */
+/**
      * 根据宽、高和目标高度 等比例求宽度
      *
      * @param w
      * @param h
      * @param height
      * @return
-     */
+     *//*
+
     public static Integer getWidth(Integer w, Integer h, Integer height) {
         return w * height / h;
     }
-    /**
+    */
+/**
      * 从中间裁切需要的大小
      * @param src
      * @param target
      * @param width
      * @param height
-     */
+     *//*
+
     @SuppressWarnings("static-access")
     public final static void CutCenter(String src, String target, Integer width, Integer height) {
         File out = new File(target); // 目的图片
@@ -343,11 +362,13 @@ public class SimpleImageUtils {
             IOUtils.closeQuietly(outStream);
         }
     }
-    /**
+    */
+/**
      * 裁切 为正文形
      * @param src
      * @param target
-     */
+     *//*
+
     public final static void Cut(String src, String target) {
         File out = new File(target); // 目的图片
         FileOutputStream outStream = null;
@@ -386,3 +407,4 @@ public class SimpleImageUtils {
     }
 
 }
+*/
