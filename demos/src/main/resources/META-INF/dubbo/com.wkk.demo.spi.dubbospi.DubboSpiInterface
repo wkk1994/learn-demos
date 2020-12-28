@@ -1,0 +1,2 @@
+hello = com.wkk.demo.spi.dubbospi.HelloDubboSpiImpl
+name = com.wkk.demo.spi.dubbospi.NameDubboSpiImpl
