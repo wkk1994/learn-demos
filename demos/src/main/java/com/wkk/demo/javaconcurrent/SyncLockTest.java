@@ -41,7 +41,7 @@ public class SyncLockTest {
 
         // 如果不执行hashCode方法，则对象头的中的hashCode为0，
         // 如果执行了hashCode方法并且对象没有重载hashCode，会导致对象不能进入偏向锁状态；其他不受影响
-        //object.hashCode();
+        object.hashCode();
         System.out.println("2_调用hashCode后状态: " + getLongBinaryString(unsafe.getLong(object, 0L)));
 
         synchronized (object) {
