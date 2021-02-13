@@ -1,6 +1,9 @@
 package com.wkk.demo.javaconcurrent;
 
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+
 /**
  * @Description volatile关键字用途测试：保证可见性和指令重排序
  * @Author Wangkunkun
@@ -50,6 +53,8 @@ public class VolatileTest {
      * 如果不存在指令重排序，不会出现x=0,y=0的情况
      */
     public static void orderingTest() {
+        long beginTime = System.currentTimeMillis();
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
         int i = 0;
         for (;;) {
             a = 0; b = 0; x = 0; y = 0;
@@ -57,6 +62,13 @@ public class VolatileTest {
             Thread one = new Thread() {
                 @Override
                 public void run() {
+                    try {
+                        cyclicBarrier.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (BrokenBarrierException e) {
+                        e.printStackTrace();
+                    }
                     a = 1;
                     x = b;
                 }
@@ -64,6 +76,13 @@ public class VolatileTest {
             Thread two =  new Thread() {
                 @Override
                 public void run() {
+                    try {
+                        cyclicBarrier.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (BrokenBarrierException e) {
+                        e.printStackTrace();
+                    }
                     b = 1;
                     y = a;
                 }
@@ -77,8 +96,11 @@ public class VolatileTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            long endTime = System.currentTimeMillis();
             if(x == 0 &&  y == 0) {
+                System.out.println(endTime - beginTime);
                 System.out.println(String.format("第%s次出现了乱序执行的情况，x=%s, y=%s", i, x, y));
+                return;
             }
         }
     }
